@@ -1,42 +1,11 @@
 # Constants
 
-OPTIONS = ["1", "2", "3"]
+VALID_OPTIONS = ["1", "2", "3"]
 ACTIONS = [
     "Movies in alphabetical order",
     "Titles in given year",
     "Modify all ratings",
 ]
-
-
-# main program
-def main():
-    file_input = input("Enter filename: \n")
-    movie_data = open_file(file_input)
-
-    if movie_data is None:
-        print(f"File {file_input} not found!")
-        quit()
-
-    menu()
-    user_input = input("Enter your selection: \n")
-    movie_list = [item.strip().split(";") for item in movie_data]
-
-    while user_input in OPTIONS:
-        movie_list = movie_list
-
-        if user_input == OPTIONS[0]:
-            sort_movies_by_title(movie_list)
-
-        if user_input == OPTIONS[1]:
-            by_year = input("Enter year: \n")
-            display_move_by_year(movie_list, by_year)
-
-        if user_input == OPTIONS[2]:
-            rating = float(input("Enter modifier for ratings: \n"))
-            update_rating(movie_list, rating)
-
-        menu()
-        user_input = input("Enter your selection: \n")
 
 
 def open_file(filename):
@@ -53,7 +22,7 @@ def open_file(filename):
 
 def menu():
     print(f"\n{'*' * 31}")
-    for option, action in zip(OPTIONS, ACTIONS):
+    for option, action in zip(VALID_OPTIONS, ACTIONS):
         print(f"{option}. {action}")
     print(f"{'*' * 31}\n")
 
@@ -64,7 +33,8 @@ def sort_movies_by_title(list):
     """
     sorted_list = sorted(list, key=lambda x: x[0])
     for item in sorted_list:
-        print(f"{item[0]:<50}{float(item[1]):>6.2f}{item[2]:>6}")
+        title, rating, year = item
+        print(f"{title:<50}{float(rating):>6.2f}{year:>6}")
 
 
 def display_move_by_year(list, year):
@@ -74,7 +44,7 @@ def display_move_by_year(list, year):
 
     for item in list:
         if item[2] == year:
-            print(f"{item[0]:<50}")
+            print(f"{item[0]}")
 
 
 def update_rating(list, rating):
@@ -88,6 +58,37 @@ def update_rating(list, rating):
         item[1] = float(item[1]) + rating
         updated_list.append(item)
     return updated_list
+
+
+# main program
+def main():
+    file_input = input("Enter filename:\n")
+    movie_data = open_file(file_input)
+
+    if movie_data is None:
+        print(f"\nFile {file_input} not found!")
+        quit()
+
+    menu()
+    user_input = input("Enter your selection:\n")
+    movie_list = [item.strip().split(";") for item in movie_data]
+
+    while user_input in VALID_OPTIONS:
+        movie_list = movie_list
+
+        if user_input == VALID_OPTIONS[0]:
+            sort_movies_by_title(movie_list)
+
+        if user_input == VALID_OPTIONS[1]:
+            by_year = input("Enter year:\n")
+            display_move_by_year(movie_list, by_year)
+
+        if user_input == VALID_OPTIONS[2]:
+            rating = float(input("Enter modifier for ratings:\n"))
+            update_rating(movie_list, rating)
+
+        menu()
+        user_input = input("Enter your selection:\n")
 
 
 if __name__ == "__main__":
